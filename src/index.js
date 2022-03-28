@@ -4,26 +4,16 @@
 import dotenv from 'dotenv';
 import http from 'http';
 import debug from 'debug';
+
 import app from './app.js';
+import winstonLogger from './configurations/logger.js';
 
 dotenv.config();
 
 const appDebug = debug('authentication-server:server');
 
-if (!process.env.JWT_ENCRYPT_ALGLORITHM) {
-  throw new Error('JWT_ENCRYPT_ALGLORITHM is not set');
-}
-
 if (!process.env.JWT_ENCRYPT_SECRET) {
   throw new Error('JWT_ENCRYPT_SECRET is not set');
-}
-
-if (!process.env.JWT_EXPIRATION_ACCESS_TOKEN) {
-  throw new Error('JWT_EXPIRATION_ACCESS_TOKEN is not set');
-}
-
-if (!process.env.JWT_EXPIRATION_REFRESH_TOKEN) {
-  throw new Error('JWT_EXPIRATION_REFRESH_TOKEN is not set');
 }
 
 const normalizePort = (val) => {
@@ -63,6 +53,7 @@ const onListening = () => {
   const addr = server.address();
   const bind = typeof addr === 'string' ? `pipe ${addr}` : `port ${addr.port}`;
   appDebug(`Listening on ${bind}`);
+  winstonLogger.info(`Listening on ${bind}`);
 };
 
 /**
@@ -79,11 +70,11 @@ const onError = (error) => {
   // handle specific listen errors with friendly messages
   switch (error.code) {
     case 'EACCES':
-      console.error(`${bind} requires elevated privileges`);
+      winstonLogger.error(`${bind} requires elevated privileges`);
       process.exit(1);
       break;
     case 'EADDRINUSE':
-      console.error(`${bind} is already in use`);
+      winstonLogger.error(`${bind} is already in use`);
       process.exit(1);
       break;
     default:

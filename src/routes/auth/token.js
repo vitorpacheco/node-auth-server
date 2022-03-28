@@ -27,16 +27,16 @@ router.post('/token', async (req, res) => {
     { id: client.id, type: 'access' },
     process.env.JWT_ENCRYPT_SECRET,
     {
-      algorithm: process.env.JWT_ENCRYPT_ALGLORITHM,
-      expiresIn: process.env.JWT_EXPIRATION_ACCESS_TOKEN,
+      algorithm: process.env.JWT_ENCRYPT_ALGLORITHM || 'HS256',
+      expiresIn: process.env.JWT_EXPIRATION_ACCESS_TOKEN || '2h',
     }
   );
   const refreshToken = jwt.sign(
     { id: client.id, type: 'refresh' },
     process.env.JWT_ENCRYPT_SECRET,
     {
-      algorithm: process.env.JWT_ENCRYPT_ALGLORITHM,
-      expiresIn: process.env.JWT_EXPIRATION_REFRESH_TOKEN,
+      algorithm: process.env.JWT_ENCRYPT_ALGLORITHM || 'HS256',
+      expiresIn: process.env.JWT_EXPIRATION_REFRESH_TOKEN || '1d',
     }
   );
 
