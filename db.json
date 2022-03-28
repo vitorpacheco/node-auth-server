@@ -1,0 +1,61 @@
+{
+  "clients": [
+    {
+      "id": "1b65f644-624d-42ef-a57a-8c079d0cc61f",
+      "name": "digitalk",
+      "clientId": "5e04b1ba-5b6e-4f1f-87da-bb44605dbe3d",
+      "clientSecret": "$2b$10$y37SWSNZVL/.W9dPYoDKku/Y7adSVZ5aDsU2CESCi7u.anDMPk43O",
+      "active": true
+    }
+  ],
+  "tokens": [
+    {
+      "id": "5e553b89-4663-4146-8b43-dbd2cc9ae66c",
+      "clientId": "1b65f644-624d-42ef-a57a-8c079d0cc61f",
+      "type": "access",
+      "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjFiNjVmNjQ0LTYyNGQtNDJlZi1hNTdhLThjMDc5ZDBjYzYxZiIsInR5cGUiOiJhY2Nlc3MiLCJpYXQiOjE2NDgzMTQzNzcsImV4cCI6MTY0ODMyMTU3N30.PniauacqUEckZVt706SN_bTI8d8WxW4KR0yHc01hEzw",
+      "expiresIn": 1648321577,
+      "createdAt": 1648314377968
+    },
+    {
+      "id": "5f8e7e1f-5173-4294-a649-6e8e09208634",
+      "clientId": "1b65f644-624d-42ef-a57a-8c079d0cc61f",
+      "type": "refresh",
+      "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjFiNjVmNjQ0LTYyNGQtNDJlZi1hNTdhLThjMDc5ZDBjYzYxZiIsInR5cGUiOiJyZWZyZXNoIiwiaWF0IjoxNjQ4MzE0Mzc3LCJleHAiOjE2NDg0MDA3Nzd9.uW_ylUZjNa-iWGy9pu7XNj26BWxZI8cWFcwuagweo38",
+      "expiresIn": 1648400777,
+      "createdAt": 1648314377968
+    },
+    {
+      "id": "cf9a8c3e-c0fa-4699-af6e-5623fb9a1f34",
+      "clientId": "1b65f644-624d-42ef-a57a-8c079d0cc61f",
+      "type": "access",
+      "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjFiNjVmNjQ0LTYyNGQtNDJlZi1hNTdhLThjMDc5ZDBjYzYxZiIsInR5cGUiOiJhY2Nlc3MiLCJpYXQiOjE2NDgzMjQ4MjksImV4cCI6MTY0ODMzMjAyOX0.6iun8rr7qzyZDll5kmZqdnvWmh5Ko6duiCbOzwcRY5g",
+      "expiresIn": 1648332029,
+      "createdAt": 1648324829647
+    },
+    {
+      "id": "625c5713-9d5b-4d35-890a-14d0e83b34b3",
+      "clientId": "1b65f644-624d-42ef-a57a-8c079d0cc61f",
+      "type": "refresh",
+      "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjFiNjVmNjQ0LTYyNGQtNDJlZi1hNTdhLThjMDc5ZDBjYzYxZiIsInR5cGUiOiJyZWZyZXNoIiwiaWF0IjoxNjQ4MzI0ODI5LCJleHAiOjE2NDg0MTEyMjl9.D6LV6qm4Yol9VkMHwBzglZaQjbDPzaAjoM_f1QMK8Y4",
+      "expiresIn": 1648411229,
+      "createdAt": 1648324829647
+    },
+    {
+      "id": "8d3cecf8-f368-41c7-9151-ce59c6dd74b0",
+      "clientId": "1b65f644-624d-42ef-a57a-8c079d0cc61f",
+      "type": "access",
+      "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjFiNjVmNjQ0LTYyNGQtNDJlZi1hNTdhLThjMDc5ZDBjYzYxZiIsInR5cGUiOiJhY2Nlc3MiLCJpYXQiOjE2NDgzMjcyMjksImV4cCI6MTY0ODMzNDQyOX0.6zl3CK1DzcfhTvlVDkUKhiGOVbesXKRmFx6U74n-c9M",
+      "expiresIn": 1648334429,
+      "createdAt": 1648327229315
+    },
+    {
+      "id": "df04a0ad-7dfd-435f-86dc-fa695bb0b6e6",
+      "clientId": "1b65f644-624d-42ef-a57a-8c079d0cc61f",
+      "type": "refresh",
+      "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjFiNjVmNjQ0LTYyNGQtNDJlZi1hNTdhLThjMDc5ZDBjYzYxZiIsInR5cGUiOiJyZWZyZXNoIiwiaWF0IjoxNjQ4MzI3MjI5LCJleHAiOjE2NDg0MTM2Mjl9.192RlKLiAyBGP7vNpuaOP08qbtC12MwWoQOzH5KUKaI",
+      "expiresIn": 1648413629,
+      "createdAt": 1648327229315
+    }
+  ]
+}
