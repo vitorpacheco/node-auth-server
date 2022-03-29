@@ -24,7 +24,7 @@ const isAuthenticated = async (req, res, next) => {
   try {
     const decodedAccessToken = jwt.verify(accessToken, process.env.JWT_ENCRYPT_SECRET);
 
-    const client = db.data.clients.find(
+    const client = db.data.users.find(
       (value) => value.id === decodedAccessToken.id && value.active === true
     );
 

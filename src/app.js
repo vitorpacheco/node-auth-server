@@ -12,6 +12,11 @@ import registerRouter from './routes/auth/register.js';
 import tokenRouter from './routes/auth/token.js';
 import userInfoRouter from './routes/auth/userInfo.js';
 
+import { checkAdminUser } from './services/user.js';
+
+import conneectDatabase from './configurations/mongodb.js';
+import winstonLogger from './configurations/logger.js';
+
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const app = express();
 
@@ -34,6 +39,13 @@ app.use('/users', usersRouter);
 // catch 404 and forward to error handler
 app.use((req, res, next) => {
   next(createError(404));
+});
+
+app.on('auth-server:initialized', async () => {
+  winstonLogger.info('verifying if admin user exists');
+
+  await conneectDatabase();
+  await checkAdminUser();
 });
 
 // error handler

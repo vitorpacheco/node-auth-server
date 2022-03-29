@@ -13,7 +13,7 @@ router.get("/userinfo", isAuthenticated, async (req, res) => {
 
   await db.read();
 
-  const client = db.data.clients.find(
+  const client = db.data.users.find(
     (value) => value.id === decodedAccessToken.id && value.active
   );
 

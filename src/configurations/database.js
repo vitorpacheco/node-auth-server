@@ -9,7 +9,7 @@ const adapter = new JSONFile(file);
 const db = new Low(adapter);
 
 db.data ||= {
-  clients: [],
+  users: [],
   tokens: [],
 };
 
