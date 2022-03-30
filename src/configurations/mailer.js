@@ -21,12 +21,4 @@ const transporter = nodemailer.createTransport({
   },
 });
 
-export const sendMail = async (from, to, subject, text, html = null) => {
-  const info = await transporter.sendMail({ from, to, subject, text, html });
-
-  winstonLogger.info(`Message sent: ${info.messageId}`);
-  winstonLogger.info(`Preview URL: ${nodemailer.getTestMessageUrl(info)}`);
-};
-
-
 export default transporter;

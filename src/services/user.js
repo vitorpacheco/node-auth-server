@@ -3,25 +3,8 @@ import { v4 as uuidv4 } from 'uuid';
 import bcrypt from 'bcrypt';
 
 import winstonLogger from '../configurations/logger.js';
-import { sendMail } from '../configurations/mailer.js';
 import { UserModel } from '../schemas/user.js';
-
-const generateEmailForNewAdminUser = (name, secret) => {
-  const plainBody = `You can use the following credentials to login:\n Client ID: ${name}\nClient Secret: ${secret}`;
-
-  const htmlBody = `
-  <h1>Welcome to the auth server</h1>
-  <p>
-    You can use the following credentials to login:
-  </p>
-
-  <ul>
-    <li>Client ID: ${name}</li>
-    <li>Client Secret: ${secret}</li>
-  </ul>
-`;
-  return { plainBody, htmlBody };
-};
+import { generateEmailForNewUser, sendMail } from './mail.js';
 
 export const findAdminUsers = async () => {
   const usersAdmin = await UserModel.count({
@@ -52,7 +35,7 @@ export const createAdminUser = async () => {
     `admin user created with clientId: ${name}, clientSecret: ${secret}`
   );
 
-  const { plainBody, htmlBody } = generateEmailForNewAdminUser(name, secret);
+  const { plainBody, htmlBody } = generateEmailForNewUser(name, secret);
 
   await sendMail(
     'auth-server@example.com',
@@ -91,18 +74,30 @@ export const findUserByClientIdAndSecret = async (clientId, clientSecret) =>
     });
   });
 
-export const saveUser = async (user) => {
+export const saveUser = async (user, sendEmail = false) => {
   const secret = uuidv4();
 
-  return UserModel.create({
+  const result = UserModel.create({
     name: user.name,
     email: user.email,
     clientId: user.name,
     clientSecret: await bcrypt.hash(secret, 10),
-    roles: ['client'],
+    roles: user.roles,
   });
 
-  // TODO: send email to user
+  if (sendEmail) {
+    const { plainBody, htmlBody } = generateEmailForNewUser(user.name, secret);
+
+    await sendMail(
+      'auth-server@example.com',
+      process.env.ADMIN_EMAIL,
+      'Welcome to Auth Server',
+      plainBody,
+      htmlBody
+    );
+  }
+
+  return result;
 };
 
 export const findUserActiveById = async (id) => {

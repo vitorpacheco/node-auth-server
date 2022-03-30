@@ -2,9 +2,18 @@ import express from 'express';
 
 const router = express.Router();
 
-/* GET users listing. */
+/**
+ * @swagger
+ *
+ * /:
+ *  get:
+ *    description: Get users
+ *    responses:
+ *      200:
+ *        description: OK
+ */
 router.get('/', (req, res) => {
-  res.send('respond with a resource');
+  res.json({ result: 'respond with a resource' });
 });
 
 export default router;

@@ -13,10 +13,17 @@ router.post('/register', isAdminAuthenticated, async (req, res) => {
     return;
   }
 
-  const result = await saveUser({
+  const user = {
     name: req.body.name,
     email: req.body.email,
-  });
+    roles: ['client'],
+  };
+
+  if (req.body.isAdmin) {
+    user.roles.push('admin');
+  }
+
+  const result = await saveUser(user, true);
 
   res.json({ result });
 });
