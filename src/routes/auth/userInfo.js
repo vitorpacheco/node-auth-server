@@ -1,27 +1,21 @@
-import express from "express";
-import jwt from "jsonwebtoken";
+import express from 'express';
 
-import db from "../../configurations/database.js";
-import isAuthenticated from "../../middlewares/authentication.js";
+import { findUserActiveById } from '../../services/user.js';
+import { getAndDecodeToken } from '../../services/token.js';
+import isAuthenticated from '../../middlewares/is-authenticated.js';
 
 const router = express.Router();
 
-router.get("/userinfo", isAuthenticated, async (req, res) => {
-  const authorization = req.get("authorization");
-  const accessToken = authorization.split(" ")[1];
-  const decodedAccessToken = jwt.verify(accessToken, "asdf");
+router.get('/userinfo', isAuthenticated, async (req, res) => {
+  const decodedToken = getAndDecodeToken(req);
 
-  await db.read();
+  const user = await findUserActiveById(decodedToken.id);
 
-  const client = db.data.users.find(
-    (value) => value.id === decodedAccessToken.id && value.active
-  );
-
-  if (!client) {
+  if (!user) {
     res.sendStatus(404);
   }
 
-  res.json(client);
+  res.json(user);
 });
 
 export default router;

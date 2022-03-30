@@ -1,7 +1,7 @@
 import mongoose from 'mongoose';
 
 const tokenSchema = new mongoose.Schema({
-  clientId: mongoose.ObjectId,
+  userId: mongoose.ObjectId,
   type: String,
   token: String,
   expiresIn: Number,

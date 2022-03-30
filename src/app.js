@@ -11,6 +11,7 @@ import usersRouter from './routes/users.js';
 import registerRouter from './routes/auth/register.js';
 import tokenRouter from './routes/auth/token.js';
 import userInfoRouter from './routes/auth/userInfo.js';
+import revokeRouter from './routes/auth/revoke.js';
 
 import { checkAdminUser } from './services/user.js';
 
@@ -34,6 +35,7 @@ app.use('/', indexRouter);
 app.use('/auth', registerRouter);
 app.use('/auth', tokenRouter);
 app.use('/auth', userInfoRouter);
+app.use('/auth', revokeRouter);
 app.use('/users', usersRouter);
 
 // catch 404 and forward to error handler

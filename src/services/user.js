@@ -1,3 +1,4 @@
+import mongoose from 'mongoose';
 import { v4 as uuidv4 } from 'uuid';
 import bcrypt from 'bcrypt';
 
@@ -24,7 +25,7 @@ const generateEmailForNewAdminUser = (name, secret) => {
 
 export const findAdminUsers = async () => {
   const usersAdmin = await UserModel.count({
-    roles: {$eq: 'admin'},
+    roles: { $eq: 'admin' },
   }).exec();
 
   return usersAdmin;
@@ -33,7 +34,10 @@ export const findAdminUsers = async () => {
 export const createAdminUser = async () => {
   winstonLogger.info(`creating a new admin user with email: ${process.env.ADMIN_EMAIL}`);
 
-  const name = process.env.ADMIN_EMAIL.substring(0, process.env.ADMIN_EMAIL.lastIndexOf("@"));
+  const name = process.env.ADMIN_EMAIL.substring(
+    0,
+    process.env.ADMIN_EMAIL.lastIndexOf('@')
+  );
   const secret = uuidv4();
 
   await UserModel.create({
@@ -41,17 +45,19 @@ export const createAdminUser = async () => {
     email: process.env.ADMIN_EMAIL,
     clientId: name,
     clientSecret: await bcrypt.hash(secret, 10),
-    roles: ["admin"],
+    roles: ['admin'],
   });
 
-  winstonLogger.info(`admin user created with clientId: ${name}, clientSecret: ${secret}`);
+  winstonLogger.info(
+    `admin user created with clientId: ${name}, clientSecret: ${secret}`
+  );
 
   const { plainBody, htmlBody } = generateEmailForNewAdminUser(name, secret);
 
   await sendMail(
-    "auth-server@example.com",
+    'auth-server@example.com',
     process.env.ADMIN_EMAIL,
-    "Welcome to Auth Server",
+    'Welcome to Auth Server',
     plainBody,
     htmlBody
   );
@@ -68,21 +74,22 @@ export const checkAdminUser = async () => {
   await createAdminUser();
 };
 
-export const findTokenByClientIdAndSecret = async (clientId, clientSecret) => new Promise((resolve, reject) => {
-  const user = UserModel.findOne({
-    clientId,
-  }).exec();
+export const findUserByClientIdAndSecret = async (clientId, clientSecret) =>
+  new Promise((resolve, reject) => {
+    const user = UserModel.findOne({
+      clientId,
+    }).exec();
 
-  user.then(async (userStored) => {
-    const isMatch = await bcrypt.compare(clientSecret, userStored.clientSecret);
+    user.then(async (userStored) => {
+      const isMatch = await bcrypt.compare(clientSecret, userStored.clientSecret);
 
-    if (isMatch) {
-      return resolve(userStored);
-    }
+      if (isMatch) {
+        return resolve(userStored);
+      }
 
-    return reject(new Error("Invalid clientId or clientSecret"));
+      return reject(new Error('Invalid clientId or clientSecret'));
+    });
   });
-});
 
 export const saveUser = async (user) => {
   const secret = uuidv4();
@@ -92,16 +99,43 @@ export const saveUser = async (user) => {
     email: user.email,
     clientId: user.name,
     clientSecret: await bcrypt.hash(secret, 10),
-    roles: ["client"],
+    roles: ['client'],
   });
 
   // TODO: send email to user
+};
+
+export const findUserActiveById = async (id) => {
+  const user = UserModel.findOne({
+    id: mongoose.Types.ObjectId(id), active: true,
+  }).exec();
+
+  return user;
+};
+
+export const findUserByClientId = async (clientId) => {
+  const user = UserModel.findOne({
+    clientId,
+  }).exec();
+
+  return user;
+};
+
+export const existsByEmail = async (email) => {
+  const user = await UserModel.findOne({
+    email
+  }).exec();
+
+  return user !== null;
 };
 
 export default {
   findAdminUsers,
   createAdminUser,
   checkAdminUser,
-  findTokenByClientIdAndSecret,
+  findUserByClientIdAndSecret,
   saveUser,
+  findUserActiveById,
+  findUserByClientId,
+  existsByEmail,
 };

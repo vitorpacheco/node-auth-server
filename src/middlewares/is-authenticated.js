@@ -1,11 +1,11 @@
 import jwt from 'jsonwebtoken';
 
-import db from '../configurations/database.js';
+import { findUserActiveById } from '../services/user.js';
+import { findTokenByTypeAndValue } from '../services/token.js';
+import winstonLogger from '../configurations/logger.js';
 
 const isAuthenticated = async (req, res, next) => {
   const authorization = req.get('authorization');
-
-  await db.read();
 
   if (!authorization) {
     return res.sendStatus(401);
@@ -13,25 +13,22 @@ const isAuthenticated = async (req, res, next) => {
 
   const accessToken = authorization.split(' ')[1];
 
-  const token = db.data.tokens.find(
-    (value) => value.type === 'access' && value.token === accessToken
-  );
+  const token = await findTokenByTypeAndValue('access', accessToken);
 
   if (!token) {
     return res.sendStatus(401);
   }
 
   try {
-    const decodedAccessToken = jwt.verify(accessToken, process.env.JWT_ENCRYPT_SECRET);
+    const decodedToken = jwt.verify(accessToken, process.env.JWT_ENCRYPT_SECRET);
 
-    const client = db.data.users.find(
-      (value) => value.id === decodedAccessToken.id && value.active === true
-    );
+    const user = await findUserActiveById(decodedToken.id);
 
-    if (!client) {
+    if (user == null) {
       return res.sendStatus(401);
     }
   } catch (error) {
+    winstonLogger.error(error);
     return res.sendStatus(401);
   }
 

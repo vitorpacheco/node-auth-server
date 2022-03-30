@@ -1,73 +1,33 @@
 import express from 'express';
-import { v4 as uuidv4 } from 'uuid';
-import jwt from 'jsonwebtoken';
 
-import { findTokenByClientIdAndSecret } from '../../services/user.js';
-import { saveToken } from '../../services/token.js';
-import db from '../../configurations/database.js';
+import { findUserByClientIdAndSecret } from '../../services/user.js';
+import { saveTokens, generateToken } from '../../services/token.js';
 
 const router = express.Router();
 
 router.post('/token', async (req, res) => {
   const request = req.body;
 
-  const client = await findTokenByClientIdAndSecret(request.client_id, request.client_secret);
+  const user = await findUserByClientIdAndSecret(request.client_id, request.client_secret);
 
-  if (client == null || !client.active) {
+  if (user == null || !user.active) {
     res.sendStatus(400);
     return;
   }
 
-  const accessToken = jwt.sign(
-    { id: client.id, type: 'access' },
-    process.env.JWT_ENCRYPT_SECRET,
-    {
-      algorithm: process.env.JWT_ENCRYPT_ALGLORITHM || 'HS256',
-      expiresIn: process.env.JWT_EXPIRATION_ACCESS_TOKEN || '2h',
-    }
-  );
+  const accessToken = generateToken(user.id, 'access');
+  const refreshToken = generateToken(user.id, 'refresh');
 
-  const refreshToken = jwt.sign(
-    { id: client.id, type: 'refresh' },
-    process.env.JWT_ENCRYPT_SECRET,
-    {
-      algorithm: process.env.JWT_ENCRYPT_ALGLORITHM || 'HS256',
-      expiresIn: process.env.JWT_EXPIRATION_REFRESH_TOKEN || '1d',
-    }
-  );
-
-  await saveToken(client.id, 'access', accessToken);
-  await saveToken(client.id, 'refresh', refreshToken);
-
-  const decodedAccessToken = jwt.verify(accessToken, process.env.JWT_ENCRYPT_SECRET);
-
-  // db.data.tokens.push({
-  //   id: uuidv4(),
-  //   clientId: client.id,
-  //   type: 'access',
-  //   token: accessToken,
-  //   expiresIn: decodedAccessToken.exp,
-  //   createdAt: new Date().getTime(),
-  // });
-
-  // const decodedRefreshToken = jwt.verify(refreshToken, process.env.JWT_ENCRYPT_SECRET);
-
-  // db.data.tokens.push({
-  //   id: uuidv4(),
-  //   clientId: client.id,
-  //   type: 'refresh',
-  //   token: refreshToken,
-  //   expiresIn: decodedRefreshToken.exp,
-  //   createdAt: new Date().getTime(),
-  // });
-
-  // await db.write();
+  await saveTokens(user.id, [
+    { type: 'access', value: accessToken.token },
+    { type: 'refresh', value: refreshToken.token },
+  ]);
 
   res.json({
-    accessToken,
-    refreshToken,
+    accessToken: accessToken.token,
+    refreshToken: refreshToken.token,
     tokenType: 'Bearer',
-    expiresIn: decodedAccessToken.exp,
+    expiresIn: accessToken.exp,
   });
 });
 
